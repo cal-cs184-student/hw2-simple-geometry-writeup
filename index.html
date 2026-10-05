@@ -36,7 +36,7 @@
 
 		<br>
 
-		Link to webpage: (TODO) <a href="https://cs184.eecs.berkeley.edu/fa26">cs184.eecs.berkeley.edu/fa26</a>
+		Link to webpage: <a href="https://cal-cs184-student.github.io/hw2-simple-geometry-writeup/">https://cal-cs184-student.github.io/hw2-simple-geometry-writeup/</a>
 
 		<br>
 		
@@ -58,20 +58,20 @@
 
 		<h3>Part 1: Bezier Curves with 1D de Casteljau Subdivision</h3>
 		<p>
-			Bezier curves are smooth parametric polynomial curves, which are defined based on a series of control points. These control 
+			Bezier curves are smooth parametric polynomial curves that are defined by a series of control points. These control 
 			points determine the Bezier curve such that it always passes through the first and last control points, and the intermediate points
 			between act as "magnets," pulling on the curve and helping shape it despite not actually lying on the curve. Bezier curves play
 			a major role in computer graphics because they enable us to model approximations of more complex shapes found in the real world. 
 		</p>
 		<p>
 			The de Casteljau algorithm is a simple way to, given the control points for a Bezier curve, find points that lie on the Bezier curve
-			itself at given parameter values. For n control points and a parameter value of t, we can calculate n-1 intermediate control points at
+			itself at specific parameter values. For n control points and a parameter value of t, we can calculate n-1 intermediate control points at
 			t, where an intermediate point is calculated as: \(p_{i} = (1 - t)*p_{i} + t*p_{i+1}\), for \(1 \leq i \leq n-1 \). Once a subdivision 
 			of intermediate points is computed, we can then recursively continue computing these sets of intermediate points until a single point is 
 			interpolated, and this point will lie on the Bezier curve. A full Bezier curve can thus be evaluated from these control points by completing
-			all recursive subdivisions at all values of the parameter t. In my code, I implemented this recursively so that each call to the 
+			all recursive subdivisions at all values of the parameter t. In my code, I implemented this process so that each call to the 
 			evaluation function completes one level of subdivision by interpolating between the adjacent pairs of given points and returning these 
-			interpolations; if there is only one given point, the recursion ends there.
+			interpolations; if there is only one given point, no interpolation needs to occur and the process ends there.
 		</p>
 		<p>
 			The table of images below displays each level of subdivision on a Bezier curve with 6 control points. The evaluated Bezier curve
@@ -113,15 +113,45 @@
 		</div>
 
 		<figure>
-			<img src="assets/s1p1_modcurve.png" width="600px"/>
+			<img src="assets/s1p1_modcurve.png" width="500px"/>
 			<figcaption>
 				A modification of the same 6-point Bezier curve from above, with some control points pulled to different locations and
 				subdivision occurring at a different value of t.
 			</figcaption>
 		</figure>
 
-		<h3>Part 2: Bezier surfaces with separable 1D de Casteljau</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<h3>Part 2: Bezier Surfaces with Separable 1D de Casteljau</h3>
+		<p>
+			The concept of Bezier curves can be generalized to 3D, where a Bezier surface is defined by a grid of control points in 3D space
+			and parameters u and v. We can think of each row of points as a set of 2D control points, and then use the de Casteljau algorithm
+			and the parameter u as above to recursively subdivide until we reach a final point for every row in the grid. This resulting set of 
+			intermediate points then acts as control points for a Bezier curve parametrized by v in the column-wise direction, so we can once again use the de
+			Casteljau algorithm with the parameter v to obtain the final point, which lies on the Bezier surface at the parameters u and v.
+			Therefore we are separating the evaluation of the Bezier surface into evaluation of Bezier curves along one orientation, then 
+			evaluating the resulting curve along the other orientation. Additionally, evaluating the Bezier surface first by columns and then 
+			by rows produces the same result as first by rows and then by columns.
+		</p>
+
+		<figure>
+			<img src="assets/s1p2_lecturenotes.png" width="500px"/>
+			<figcaption>
+				A visualization of the above, taken from CS 284A lecture notes by James O'Brien (fall 2026).
+			</figcaption>
+		</figure>
+
+		<p>
+			Implementation of this process was simple: for each row vector in the grid of control points, I used the evaluate1D function (which 
+			returns the <i>final</i> result point on the Bezier curve from a given set of control points) with parameter u, 
+			appending the results into another vector. I then used the evaluate1D function on this result vector with parameter v to obtain the point which
+			lies on the Bezier surface.  
+		</p>
+
+		<figure>
+			<img src="assets/s1p2_teapot.png" width="500px"/>
+			<figcaption>
+				Screenshot of bez/teapot.bez.
+			</figcaption>
+		</figure>
 
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
