@@ -155,7 +155,7 @@
 
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
-		<h3>Part 3: Area-weighted vertex normals</h3>
+		<h3>Part 3: Area-Weighted Vertex Normals</h3>
 		<p>
 			Triangle meshes are an alternative to Bezier curves when it comes to representing surfaces. However, while triangle meshes
 			are easier to directly render than Bezier curves, they do require more memory and also don't represent smooth surfaces very well.
@@ -188,10 +188,48 @@
 			</table>
 		</div>
 
+		<h3>Part 4: Edge Flip</h3>
+		<p>
+			Triangle meshes may occasionally need to be reconfigured to better represent an object or structure; these reconfigurations are 
+			often complex operations that are composites of many simple operations. One of these simple operations is an edge flip, where an 
+			edge between two triangles is instead attached at the other two vertices of the parallelogram formed by the two triangles.
+		</p>
+		<p>
+			I implemented this in my code according to the suggestions in the spec, first listing out all of the relevant half-edge mesh elements
+			and looking at which pointers would need to be reassigned. The key realization for me was that flipping the edge means that all six
+			of the half-edges in the interior of these two triangles are also affected, not just the two half-edges of the edge that's being flipped.
+			It was also helpful to remember that the faces themselves are defined by their primary half-edges, rather than being immutable structures.
+			Once I created all references to the half-edges, vertices, and faces, I set all half-edges' neighboring elements, followed by the 
+			vertices' and faces' new half-edges. I reassigned the neighboring elements according to the diagram below: 
+		</p>
+		<figure>
+			<img src="assets/s2p4_diagram.png" width="500px"/>
+			<figcaption>
+				Diagram of a triangle mesh during an edge flip.
+			</figcaption>
+		</figure>
+		<p>
+			In my implementation following this diagram, h's next half-edge is now hnn, its new vertex is now c, its face is f1, and 
+			its edge and twin remain the same; vertex a's half-edge is now t; etc. I thankfully didn't struggle with debugging, but 
+			drawing out the diagram and conceptualizing how to re-link all of these elements together was the main difficulty for me.
+			Below are screenshots of the teapot as normal and the teapot with some edges flipped, resulting in some interesting colorings
+			(likely due to shading).
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-spacing: 10px;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/s2p4_normal.png" width="400px"/>
+				  <figcaption>dae/teapot.dae with default edges.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/s2p4_flipped.png" width="400px"/>
+				  <figcaption>dae/teapot.dae with some vertical edges flipped.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
-		
-		<h3>Part 4: Edge flip</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 		<h3>Part 5: Edge split</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
