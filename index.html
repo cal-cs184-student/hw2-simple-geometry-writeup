@@ -156,8 +156,40 @@
 		<h2>Section II: Triangle Meshes and Half-Edge Data Structure</h2>
 
 		<h3>Part 3: Area-weighted vertex normals</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+		<p>
+			Triangle meshes are an alternative to Bezier curves when it comes to representing surfaces. However, while triangle meshes
+			are easier to directly render than Bezier curves, they do require more memory and also don't represent smooth surfaces very well.
+			This latter part becomes especially evident when attempting to shade surfaces, where flat shading (shading every triangle according
+			to its face's normal vector) results in a very blocky appearance. Phong shading creates a drastically improved appearance, providing 
+			smooth shading and realistic specular lighting despite not changing the triangle mesh. This approach is accomplished by interpolating vertex 
+			normals across the triangle, where the normal of a vertex is calculated as the normalization of the sum of all area-weighted 
+			normals of the faces connected to the vertex. 
+		</p>
+		<p>
+			I implemented this in my code by iterating through all of the half-edges that emerge from the given vertex. For each half-edge, I 
+			calculate the area of the associated triangle face as \( \frac{1}{2} * ||\vec{u} \times \vec{v}|| \), where u and v are the vectors that extend
+			from the current vertex to the two other vertices of the triangle. I multiply this face area by the face's normal, then add it to the 
+			sum of the face normals over all of the faces connected to the given vertex. Finally, I normalize the sum of these face normals, which
+			produces the area-weighted vertex normal that can be used for Phong shading. The screenshots below demonstrate the visual difference 
+			between flat and Phong shading.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-spacing: 10px;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/s2p3_flat.png" width="400px"/>
+				  <figcaption>dae/teapot.dae with flat shading.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/s2p3_phong.png" width="400px"/>
+				  <figcaption>dae/teapot.dae with Phong shading.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
+
+		
 		<h3>Part 4: Edge flip</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
