@@ -230,9 +230,47 @@
 			</table>
 		</div>
 
+		<h3>Part 5: Edge Split</h3>
+		<p>
+			Another simple re-meshing operation is an edge split, where a new vertex is created at the midpoint of an edge between two 
+			triangles, effectively doubling the number of triangles. I implemented my edge splitting operation according to the diagram below:
+		</p>
+		<figure>
+			<img src="assets/s2p5_diagram.png" width="600px"/>
+			<figcaption>
+				Diagram of a triangle mesh during an edge split.
+			</figcaption>
+		</figure>
+		<p>
+			Once I completed my diagram, I identified and initialized the new mesh elements that would need to be created: 1 vertex, 3 new edges, 6 new half-edges,
+			and 2 new faces. I first created the vertex at the midpoint between b and c, then set the neighboring elements for all of the new 
+			and existing half-edges. I then updated the half-edge references for all faces, edges, and vertices. For example, the new half-edge
+			bln's next half-edge is hnn, its twin is ulnn, its vertex is m, and its face is f3; for the half-edge hnn, only its next half-edge
+			and face had to be reassigned. 
+		</p>
+		<p>
+			I thankfully again didn't struggle with debugging, but I think it's because I took the time to carefully draw the diagram and identify the new
+			elements that had to be made and which ones could be reused. When assigning the half-edges of the edges and vertices, I did find it 
+			helpful to consider the symmetry of the diagram -- since the half-edge of the original edge between b and c is h, the half-edge of the new
+			"left" edge between m and a should be bln. This way, you could rotate the split diagram on the right by 90 degrees and the half-edge references
+			would be consistent for all edges. I kept a similar convention for the vertices, with the interesting result that the half-edges of all
+			original vertices "point" inwards towards m. Below are some screenshots of edge split operations on the teapot mesh.
+		</p>
+		<div style="display: flex; flex-direction: column; align-items: center;">
+			<table style="width: 100%; text-align: center; border-spacing: 10px;">
+			  <tr>
+				<td style="text-align: center;">
+				  <img src="assets/s2p5_split.png" width="400px"/>
+				  <figcaption>dae/teapot.dae after splitting some diagonal edges.</figcaption>
+				</td>
+				<td style="text-align: center;">
+				  <img src="assets/s2p5_splitflipped.png" width="400px"/>
+				  <figcaption>dae/teapot.dae after flipping the adjacent vertical edges.</figcaption>
+				</td>
+			  </tr>
+			</table>
+		</div>
 
-		<h3>Part 5: Edge split</h3>
-		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 		<h3>Part 6: Loop subdivision for mesh upsampling</h3>
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
